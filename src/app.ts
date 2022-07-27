@@ -5,24 +5,20 @@ let app = express();
 
 app.use(bodyparser.json());
 
-let userData = {
-    1: {
+let userData: [{userId: number, inviteList: {from: number, jobId: string, message: string}[]}] = [
+    {
+        userId: 1,
         inviteList: [
             {
                 from: 1,
-                jobId: "",
+                jobId: "0-9-A-F",
                 message: "Come join me!"
             }
         ]
-    }
-};
-/*
-    user object
-    [123456]: {
-        inviteList
-    }
-*/
-app.get("/", (req, resp) => {
+    },
+];
+
+app.get("/echo", (req, resp) => {
     resp.send(req.body);
 });
 
