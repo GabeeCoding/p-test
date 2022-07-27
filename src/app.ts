@@ -1,6 +1,9 @@
 import * as express from "express"
+import * as bodyparser from "body-parser"
 
 let app = express();
+
+app.use(bodyparser.json());
 
 let userData = {
     1: {
