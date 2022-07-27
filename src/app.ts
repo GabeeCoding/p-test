@@ -23,7 +23,7 @@ let userData = {
     }
 */
 app.get("/", (req, resp) => {
-    resp.send(req.headers);
+    resp.send(req.body);
 });
 
 let port = process.env.PORT||3000
