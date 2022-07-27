@@ -22,6 +22,10 @@ app.get("/echo", (req, resp) => {
     resp.send(req.body);
 });
 
+app.get("/headers", (req, resp) => {
+    resp.send(req.headers);
+});
+
 let port = process.env.PORT||3000
 app.listen(port, () => {
     console.log(`Listening on port ${port}`)
