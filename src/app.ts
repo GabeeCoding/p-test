@@ -63,13 +63,13 @@ app.get("/headers", (req, resp) => {
 	resp.send(req.headers);
 });
 
-app.get("/testSend", (req, resp) => {
+app.get("/testSend", async (req, resp) => {
 	//send it
 	//--POST https://apis.roblox.com/messaging-service/v1/universes/3788520514/topics/{topic}
 
 	const body = {message: "heheheha"};
 
-	fetch(getUrl("Test"), {
+	const result = await fetch(getUrl("Test"), {
 		method: 'POST',
 		body: JSON.stringify(body),
 		headers: {
@@ -77,7 +77,8 @@ app.get("/testSend", (req, resp) => {
 			"x-api-key": apiKey!
 		}
 	});
-	resp.send("Sent")
+	const data = await result.json();
+	resp.send(data)
 })
 
 let port = process.env.PORT||3000
