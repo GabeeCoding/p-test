@@ -46,13 +46,51 @@ function getUrl(topic: string){
 	return `https://apis.roblox.com/messaging-service/v1/universes/${placeId}/topics/${topic}`
 }
 
+function Publish(userid:number, topic: string, message: string){
+	const body = {message: message};
+
+	fetch(getUrl(`plr-${userid}-${topic}`), {
+		method: 'POST',
+		body: JSON.stringify(body),
+		headers: {
+			'Content-Type': 'application/json',
+			"x-api-key": apiKey!
+		}
+	});
+}
+
 app.post("/invite", (req, resp) => {
 	//add it to the list
 	//then notify the user
 	//how do we notify the user
 	//using MessagingService and OpenCloud
 	//read up on that
-
+	let headers = req.headers
+	//get userid, jobid and a filtered message from the headers
+	let uid = headers.userId as string
+	let jobId = headers.jobId as string
+	let msg = headers.message as string
+	let target = headers.target as string
+	let name = headers.name as string
+	if(!uid || !jobId || !msg || !target || !name){
+		resp.status(400).send("Invalid/Missing headers")
+		return
+	}
+	let userId = parseInt(uid)
+	let targetUserId = parseInt(target)
+	let targetdata = getUserData(targetUserId)!
+	//getting the TARGET'S invite list, not the sender's
+	//add the invite to the list
+	//first, check if an invite has already been sent by the sender
+	let match = targetdata.inviteList.find((invite) => invite.from == userId)
+	if(match){
+		//if there is a match
+		//return with a status code
+		resp.status(400).send("Already sent invite")
+	}
+	targetdata.inviteList.push({from: userId, jobId: jobId, message: msg})
+	Publish(targetUserId, "Notify", `${name} sent you an invite!`)
+	resp.status(200).send("Successfully sent invite")
 })
 
 app.get("/echo", (req, resp) => {
@@ -62,22 +100,6 @@ app.get("/echo", (req, resp) => {
 app.get("/headers", (req, resp) => {
 	resp.send(req.headers);
 });
-
-app.get("/testSend", (req, resp) => {
-	//send it
-	//--POST https://apis.roblox.com/messaging-service/v1/universes/3788520514/topics/{topic}
-
-	const body = {message: "heheheha"};
-
-	fetch(getUrl("Test"), {
-		method: 'POST',
-		body: JSON.stringify(body),
-		headers: {
-			'Content-Type': 'application/json',
-			"x-api-key": apiKey!
-		}
-	});
-})
 
 let port = process.env.PORT||3000
 app.listen(port, () => {
