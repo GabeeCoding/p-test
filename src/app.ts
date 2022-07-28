@@ -77,6 +77,7 @@ app.get("/testSend", (req, resp) => {
 			"x-api-key": apiKey!
 		}
 	});
+	resp.send("Sent")
 })
 
 let port = process.env.PORT||3000
