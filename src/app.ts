@@ -77,7 +77,7 @@ app.get("/testSend", async (req, resp) => {
 			"x-api-key": apiKey!
 		}
 	});
-	const data = await result.json();
+	const data = await result.text()
 	resp.send(data)
 })
 
