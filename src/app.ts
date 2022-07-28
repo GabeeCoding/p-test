@@ -73,9 +73,9 @@ app.post("/invite", (req, resp) => {
 	let target = headers.target as string
 	let name = headers.name as string
 	if(!uid || !jobId || !msg || !target || !name){
-		resp.status(400).send("Invalid/Missing headers")
-		return
-	}
+		//resp.status(400).send("Invalid/Missing headers")
+		//return
+	} // TODO: FIX THIS
 	let userId = parseInt(uid)
 	let targetUserId = parseInt(target)
 	let targetdata = getUserData(targetUserId)!
