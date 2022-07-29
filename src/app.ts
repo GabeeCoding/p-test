@@ -59,6 +59,16 @@ function Publish(userid:number, topic: string, message: string){
 	});
 }
 
+function AreHeadersValid(headers: string[]){
+	let valid = true
+	headers.forEach((header) => {
+		if(header === undefined){
+			valid = false
+		}
+	})
+	return valid
+}
+
 app.post("/invite", (req, resp) => {
 	//add it to the list
 	//then notify the user
@@ -73,15 +83,9 @@ app.post("/invite", (req, resp) => {
 	let target = headers.target as string
 	let name = headers.name as string
 	let vars = [uid,jobId,msg,target,name]
-	{
-		let ret = false
-		vars.forEach((v) => {
-			if(v === undefined){
-				resp.status(400).send("Invalid/missing header")
-				ret = true
-			}
-		});
-		if(ret) return
+	if(AreHeadersValid(vars) === false){
+		resp.status(400).send("Invalid/missing headers")
+		return
 	}
 	let userId = parseInt(uid)
 	let targetUserId = parseInt(target)
@@ -99,6 +103,10 @@ app.post("/invite", (req, resp) => {
 	Publish(targetUserId, "Notify", `${name} sent you an invite!`)
 	resp.status(200).send("Successfully sent invite")
 });
+
+app.get("/getInvites", (req,resp) => {
+
+})
 
 app.get("/echo", (req, resp) => {
 	resp.send(req.body);
