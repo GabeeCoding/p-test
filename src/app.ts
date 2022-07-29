@@ -72,10 +72,8 @@ app.post("/invite", (req, resp) => {
 	let msg = headers.message as string
 	let target = headers.target as string
 	let name = headers.name as string
-	if(!uid || !jobId || !msg || !target || !name){
-		//resp.status(400).send("Invalid/Missing headers")
-		//return
-	} // TODO: FIX THIS
+	let vars = [uid,jobId,msg,target,name]
+	vars.forEach((v) => console.log(v, v == "", v === ""))
 	let userId = parseInt(uid)
 	let targetUserId = parseInt(target)
 	let targetdata = getUserData(targetUserId)!
