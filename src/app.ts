@@ -73,7 +73,16 @@ app.post("/invite", (req, resp) => {
 	let target = headers.target as string
 	let name = headers.name as string
 	let vars = [uid,jobId,msg,target,name]
-	vars.forEach((v) => console.log(v, v == "", v === ""))
+	{
+		let ret = false
+		vars.forEach((v) => {
+			if(v === undefined){
+				resp.status(400).send("Invalid/missing header")
+				ret = true
+			}
+		});
+		if(ret) return
+	}
 	let userId = parseInt(uid)
 	let targetUserId = parseInt(target)
 	let targetdata = getUserData(targetUserId)!
@@ -89,7 +98,7 @@ app.post("/invite", (req, resp) => {
 	targetdata.inviteList.push({from: userId, jobId: jobId, message: msg})
 	Publish(targetUserId, "Notify", `${name} sent you an invite!`)
 	resp.status(200).send("Successfully sent invite")
-})
+});
 
 app.get("/echo", (req, resp) => {
 	resp.send(req.body);
